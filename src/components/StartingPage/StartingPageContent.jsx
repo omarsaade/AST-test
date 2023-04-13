@@ -38,6 +38,7 @@ const StartingPageContent = () => {
 
   const inputSearchHandler = () => {
     dispatch(uiActions.setSearch(searchInputRef.current.value));
+    setCurrentPage(0);
   };
 
   let filteredUsername = usernames.filter((val) => {
@@ -79,13 +80,15 @@ const StartingPageContent = () => {
       </div>
       <ul className={classes.usersList}>{!show && listItem}</ul>;
       <div>
-        <Paginator
-          first={currentPage * 3}
-          rows={3}
-          totalRecords={9}
-          onPageChange={onPageChange}
-          template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
-        />
+        {!search && (
+          <Paginator
+            first={currentPage * 3}
+            rows={3}
+            totalRecords={9}
+            onPageChange={onPageChange}
+            template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
+          />
+        )}
       </div>
     </>
   );
