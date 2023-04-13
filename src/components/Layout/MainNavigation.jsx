@@ -9,8 +9,6 @@ const MainNavigation = () => {
 
   const logoutHandler = () => {
     authCtx.logout();
-    //optional redirect the user
-    // And that will be navigation guards, protecting pages in our front end react auth.
   };
 
   return (

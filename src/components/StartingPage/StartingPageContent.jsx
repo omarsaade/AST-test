@@ -5,10 +5,8 @@ import { fetchUsers } from "../../store/Actions/fetchuser-actions";
 import { uiActions } from "../../store/Slice/userSlice";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 
-//core
 import "primereact/resources/primereact.min.css";
 
-//icons
 import "primeicons/primeicons.css";
 
 import { Paginator } from "primereact/paginator";
