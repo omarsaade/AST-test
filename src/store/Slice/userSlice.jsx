@@ -22,7 +22,7 @@ export const userSlice = createSlice({
       state.notifications = {
         status: "success",
         title: "Success!",
-        message: "Cart data sent successfully!",
+        message: "Data fetched successfully!",
       };
     },
     [fetchUsers.rejected]: (state, action) => {

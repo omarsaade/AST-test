@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ProductItem from "./ProductItem";
+import UserRow from "./UserRow";
 import { fetchUsers } from "../../store/Actions/fetchuser-actions";
 import { uiActions } from "../../store/Slice/userSlice";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -12,6 +12,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
 import { Paginator } from "primereact/paginator";
+
 import classes from "./StartingPageContent.module.css";
 
 const StartingPageContent = () => {
@@ -19,25 +20,13 @@ const StartingPageContent = () => {
   const users = useSelector((state) => state.user.users);
 
   const usernames = users.map((x) => x.username);
+  const searchInputRef = useRef();
 
   const show = useSelector((state) => state.user.show);
   const search = useSelector((state) => state.user.search);
   const status = useSelector((state) => state.user.notifications.status);
   const message = useSelector((state) => state.user.notifications.message);
-  // const [data, setData] = useState(usernames);
-  // const [first, setFirst] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-
-  // useEffect(() => {
-  //   setData(usernames.slice(first, first + rows));
-  //   setFirst(first);
-  // }, []);
-
-  // const onPageChange = (event) => {
-  //   const { first, rows } = event;
-  //   setData(usernames.slice(first, first + rows));
-  //   setFirst(first);
-  // };
 
   const onPageChange = (event) => {
     setCurrentPage(event.page);
@@ -47,27 +36,19 @@ const StartingPageContent = () => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const inputSearchHandler = (event) => {
-    dispatch(uiActions.setSearch(event.target.value));
+  const inputSearchHandler = () => {
+    dispatch(uiActions.setSearch(searchInputRef.current.value));
   };
 
-  // let filteredUsername = users.filter((val) => {
-  //   return val.username.toLowerCase().includes(search.toLowerCase());
-  // });
   let filteredUsername = usernames.filter((val) => {
     return val.toLowerCase().includes(search.toLowerCase());
   });
 
-  console.log(filteredUsername);
-  console.log(usernames);
-
   const listItem = filteredUsername
     .slice(currentPage * 3, currentPage * 3 + 3)
-    .map((product) => (
-      <ProductItem key={Math.random() * 10000} username={product} />
+    .map((username) => (
+      <UserRow key={Math.random() * 10000} username={username} />
     ));
-  console.log(listItem);
-  // console.log(data);
 
   if (status === "error") {
     return (
@@ -93,28 +74,15 @@ const StartingPageContent = () => {
           type="text"
           placeholder="Search User"
           onChange={inputSearchHandler}
+          ref={searchInputRef}
         />
       </div>
-      <ul className={classes.productList}>{!show && listItem}</ul>;
-      {/* <div className="card">
-        <Paginator
-          first={first}
-          rows={3}
-          totalRecords={10}
-          onPageChange={onPageChange}
-          template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
-        />
-      </div> */}
+      <ul className={classes.usersList}>{!show && listItem}</ul>;
       <div>
-        {/* {usernames
-          .slice(currentPage * 3, currentPage * 3 + 3)
-          .map((username) => (
-            <div key={username}>{username}</div>
-          ))} */}
         <Paginator
           first={currentPage * 3}
           rows={3}
-          totalRecords={10}
+          totalRecords={9}
           onPageChange={onPageChange}
           template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
         />
