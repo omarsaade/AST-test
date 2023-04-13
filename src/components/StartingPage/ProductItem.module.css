@@ -1,0 +1,15 @@
+.listItem {
+  padding: 1rem;
+  align-items: center;
+  list-style-type: none;
+  font-size: 17px;
+  border: 1px solid black;
+  font-family: inherit;
+  font-weight: bold;
+}
+.listItem:hover {
+  background-color: #38015c;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}

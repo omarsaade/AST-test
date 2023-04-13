@@ -1,0 +1,200 @@
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import ProductItem from "./ProductItem";
+import { fetchUsers } from "../../store/Actions/fetchuser-actions";
+import { uiActions } from "../../store/Slice/userSlice";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+//core
+import "primereact/resources/primereact.min.css";
+
+//icons
+import "primeicons/primeicons.css";
+
+import { Paginator } from "primereact/paginator";
+import classes from "./StartingPageContent.module.css";
+
+const StartingPageContent = () => {
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.users);
+
+  const usernames = users.map((x) => x.username);
+
+  const show = useSelector((state) => state.user.show);
+  const search = useSelector((state) => state.user.search);
+  const status = useSelector((state) => state.user.notifications.status);
+  const message = useSelector((state) => state.user.notifications.message);
+  const [data, setData] = useState(usernames);
+  const [first, setFirst] = useState(0);
+
+  const [rows, setRows] = useState(3);
+
+  useEffect(() => {
+    setData(usernames.slice(first, first + rows));
+    setFirst(first);
+  }, []);
+
+  const onPageChange = (event) => {
+    const { first, rows } = event;
+    setData(usernames.slice(first, first + rows));
+    setFirst(first);
+  };
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  const inputSearchHandler = (event) => {
+    dispatch(uiActions.setSearch(event.target.value));
+  };
+
+  let filteredUsername = users.filter((val) => {
+    return val.username.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const listItem = data.map((product) => (
+    <ProductItem key={Math.random() * 10000} username={product} />
+  ));
+  console.log(listItem);
+  console.log(data);
+
+  if (status === "error") {
+    return (
+      <section className={classes.error}>
+        <h1>{message}</h1>
+      </section>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <section className={classes.loading}>
+        <h1>{message}</h1>
+      </section>
+    );
+  }
+
+  return (
+    <>
+      <div className={classes.search}>
+        <input
+          className={classes.searchBox}
+          type="text"
+          placeholder="Search User"
+          onChange={inputSearchHandler}
+        />
+      </div>
+      <ul className={classes.productList}>{!show && listItem}</ul>;
+      <div className="card">
+        <Paginator
+          first={first}
+          rows={3}
+          
+          totalRecords={10}
+          onPageChange={onPageChange}
+          template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
+        />
+      </div>
+    </>
+  );
+};
+
+export default StartingPageContent;
+
+
+======================================================
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import ProductItem from "./ProductItem";
+import { fetchUsers } from "../../store/Actions/fetchuser-actions";
+import { uiActions } from "../../store/Slice/userSlice";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+//core
+import "primereact/resources/primereact.min.css";
+
+//icons
+import "primeicons/primeicons.css";
+
+import { Paginator } from "primereact/paginator";
+import classes from "./StartingPageContent.module.css";
+
+const StartingPageContent = () => {
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user.users);
+
+  const usernames = users.map((x) => x.username);
+
+  const show = useSelector((state) => state.user.show);
+  const search = useSelector((state) => state.user.search);
+  const status = useSelector((state) => state.user.notifications.status);
+  const message = useSelector((state) => state.user.notifications.message);
+  const [first, setFirst] = useState(0);
+  const [data, setData] = useState(usernames);
+  // console.log(data);
+
+  const onPageChange = (event) => {
+    const { first, rows } = event;
+    setData(usernames.slice(first, first + rows));
+    setFirst(first);
+  };
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  const inputSearchHandler = (event) => {
+    dispatch(uiActions.setSearch(event.target.value));
+  };
+
+  let filteredUsername = users.filter((val) => {
+    return val.username.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const listItem = data.map((product) => (
+    <ProductItem key={Math.random() * 10000} username={product} />
+  ));
+
+  if (status === "error") {
+    return (
+      <section className={classes.error}>
+        <h1>{message}</h1>
+      </section>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <section className={classes.loading}>
+        <h1>{message}</h1>
+      </section>
+    );
+  }
+
+  return (
+    <>
+      <div className={classes.search}>
+        <input
+          className={classes.searchBox}
+          type="text"
+          placeholder="Search User"
+          onChange={inputSearchHandler}
+        />
+      </div>
+      <ul className={classes.productList}>{!show && listItem}</ul>;
+      <div className="card">
+        <Paginator
+          first={first}
+          rows={3}
+          totalRecords={10}
+          onPageChange={onPageChange}
+          template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
+        />
+      </div>
+    </>
+  );
+};
+
+export default StartingPageContent;
+
+============================================================
